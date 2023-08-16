@@ -1,20 +1,17 @@
 from PIL import Image
 from datetime import date
 
-# Object of the image as a whole
-img = Image.open('./photos/Scream.jpg')
+# intialize Image object
+IMG = Image.open('./photos/Scream.jpg')
 
-# Object used to directly address single pixels in the image
-px = img.load()
-
-# function whose purpose is to give us the result of our edits
-# img is a var of type Image
+# Saves photo to filesystem
 def getPhoto(img, name):
     today = date.today()
     img.save("./result/{}_{}.jpeg".format(name, today), "JPEG")
 
-# Finds the average color of a block of pixels
-# block is a Image object instance
+### Finds the average color of a block of pixels ###
+
+# block: an Image object instance
 def averageBlock(block):
     height = block.size[0]
     width = block.size[1]
@@ -32,26 +29,32 @@ def averageBlock(block):
             sumB += px[j, i][2]
 
     # Divides the summed RGB values by the total number of pixels 
-    # then rounds to two decimals points and returns it in a tuple
+    # then converts to int and returns it in a tuple
     avg = ( int(sumR/numPixels), int(sumG/numPixels), int((sumB/numPixels)))
     return avg
+
+### Function to create an image object using the avg color 
+# of pixels then replace the block in the original image ###
 
 # img:      an Image Object
 # section:  subsection of the total Image
 # position: tuple location of the top left corner where the block was taken from 
-def replaceBlock(img, section, position):
-    blockAvg = averageBlock(section)
-    newBlock = Image.new(mode="RGB", size=section.size, color=blockAvg)
+def replaceBlock(img, block, position):
+    blockAvg = averageBlock(block)
+    newBlock = Image.new(mode="RGB", size=block.size, color=blockAvg)
     img.paste(newBlock, position)
     return img
+
+### function which divides the image passed into a grid then
+#  calls the replaceBlock function to create a pixelation effect ###
 
 # img:       an Image Object
 # name:      name you want to associate with the file when save will also save with the date
 # pixelSize: length of each size of the square to be averaged
 def pixelize(img, name, pixelSize):
     # get dimensions of the photo
-    height = img.size[0]
-    width = img.size[1]
+    height = img.size[1]
+    width = img.size[0]
 
     # define a grid of subsections for the image
     x = 0
@@ -66,4 +69,4 @@ def pixelize(img, name, pixelSize):
         y += pixelSize
     getPhoto(img, name)
 
-pixelize(img, 10, "scream")
+pixelize(IMG, "scream", 50)
