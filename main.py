@@ -3,6 +3,7 @@ from datetime import date
 
 # Object of the image as a whole
 img = Image.open('./photos/Scream.jpg')
+
 # Object used to directly address single pixels in the image
 px = img.load()
 
@@ -10,16 +11,7 @@ px = img.load()
 # img is a var of type Image
 def getPhoto(img, name):
     today = date.today()
-    img.save("./result/{}{}.jpeg".format(name, today), "JPEG")
-
-def pixelize(img, pixelSize):
-    # get dimensions of the photo
-    height = img.size[0]
-    width = img.size[1]
-
-    # define a grid of subsections for the image
-
-
+    img.save("./result/{}_{}.jpeg".format(name, today), "JPEG")
 
 # Finds the average color of a block of pixels
 # block is a Image object instance
@@ -53,11 +45,23 @@ def replaceBlock(img, section, position):
     img.paste(newBlock, position)
     return img
 
-# pos = ( int((img.size[0] / 2)-100), int((img.size[1] / 2)-100), int((img.size[0] / 2)+100), int((img.size[1] / 2)+100) )
-# block = img.crop(pos)
-# t1 = replaceBlock(img, block, (pos[0], pos[1]))
-# getPhoto(t1, "test")
 
-# averageBlock(img)
+def pixelize(img, pixelSize, name):
+    # get dimensions of the photo
+    height = img.size[0]
+    width = img.size[1]
 
-# pixelize(img)
+    # define a grid of subsections for the image
+    x = 0
+    y = 0
+    while ( y < height ):
+        while ( x < width ):
+            pos = ( x, y, (x+pixelSize), (y+pixelSize) )
+            block = img.crop(pos)
+            replaceBlock(img, block, (pos[0], pos[1]) )
+            x += pixelSize
+        x = 0
+        y += pixelSize
+    getPhoto(img, name)
+
+pixelize(img, 10, "scream")
