@@ -1,4 +1,4 @@
-from PIL import Image, ImageStat
+from PIL import Image
 from datetime import date
 
 # Object of the image as a whole
@@ -45,8 +45,10 @@ def replaceBlock(img, section, position):
     img.paste(newBlock, position)
     return img
 
-
-def pixelize(img, pixelSize, name):
+# img:       an Image Object
+# name:      name you want to associate with the file when save will also save with the date
+# pixelSize: length of each size of the square to be averaged
+def pixelize(img, name, pixelSize):
     # get dimensions of the photo
     height = img.size[0]
     width = img.size[1]
