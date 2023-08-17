@@ -53,7 +53,7 @@ def replaceBlock(img, block, position):
 # pixelSize: length of each size of the square to be averaged
 def pixelize(img, pixelSize):
     # get dimensions of the photo
-    height = img.size[1]
+    height = cpyImg.size[1]
     width = img.size[0]
 
     # define a grid of subsections for the image
