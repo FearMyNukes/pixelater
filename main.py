@@ -52,9 +52,12 @@ def replaceBlock(img, block, position):
 # name:      name you want to associate with the file when save will also save with the date
 # pixelSize: length of each size of the square to be averaged
 def pixelize(img, pixelSize):
+    # create a copy of the img object - hoodieman0
+    cpyimg = img.copy()
+
     # get dimensions of the photo
-    height = img.size[1]
-    width = img.size[0]
+    height = cpyimg.size[1]
+    width = cpyimg.size[0]
 
     # define a grid of subsections for the image
     x = 0
@@ -62,23 +65,17 @@ def pixelize(img, pixelSize):
     while ( y < height ):
         while ( x < width ):
             pos = ( x, y, (x+pixelSize), (y+pixelSize) )
-            block = img.crop(pos)
-            replaceBlock(img, block, (pos[0], pos[1]) )
+            block = cpyimg.crop(pos)
+            replaceBlock(cpyimg, block, (pos[0], pos[1]) )
             x += pixelSize
         x = 0
         y += pixelSize
-    return img
+    return cpyimg
 
-# pixelize(IMG, "scream", 50)
 gifIMGS = [IMG]
 i = 5
 while (i < 200):
-    gifIMGS.append( pixelize(IMG, i) )
-    newimg = pixelize(IMG, i)
-    # getPhoto(newimg, i)
+    gifIMGS.append(pixelize(gifIMGS[-1], i))
     i += 50
 
-# print(gifIMGS)
-print(len(gifIMGS))
-print(gifIMGS[1:])
-gifIMGS[0].save('Scream.gif', save_all=True, append_images=gifIMGS[1:], optimize=False, duration=250, loop=0)
+IMG.save('Scream.gif', save_all=True, append_images=gifIMGS[1:], optimize=False, duration=250, loop=0)
